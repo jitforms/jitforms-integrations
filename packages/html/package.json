@@ -1,0 +1,40 @@
+{
+  "name": "@jitforms/html",
+  "version": "0.1.0",
+  "description": "Zero-JS data-attribute integration for JitForms — just add a <script> tag.",
+  "type": "module",
+  "main": "./dist/jitforms.js",
+  "module": "./dist/jitforms.js",
+  "types": "./dist/jitforms.d.ts",
+  "unpkg": "./dist/jitforms.global.js",
+  "jsdelivr": "./dist/jitforms.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/jitforms.d.ts",
+      "import": "./dist/jitforms.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": ["jitforms", "html", "forms", "embed", "no-code", "data-attributes", "cdn"],
+  "author": "El Mehdi El fatihi <tech@jitforms.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/jitforms/jitforms-integrations#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jitforms/jitforms-integrations.git",
+    "directory": "packages/html"
+  },
+  "bugs": "https://github.com/jitforms/jitforms-integrations/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": true
+}

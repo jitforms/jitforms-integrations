@@ -1,0 +1,30 @@
+---
+interface Props {
+  formHash: string;
+  baseUrl?: string;
+  honeypot?: boolean;
+  redirect?: string;
+  class?: string;
+}
+
+const { formHash, baseUrl, honeypot = false, redirect, class: className } = Astro.props;
+---
+
+<form
+  data-jitform={formHash}
+  data-jitform-url={baseUrl}
+  data-jitform-redirect={redirect}
+  class={className}
+>
+  {honeypot && (
+    <div style="position:absolute;left:-9999px;top:-9999px;" aria-hidden="true" tabindex="-1">
+      <input type="text" name="_honeypot" value="" tabindex="-1" autocomplete="off" />
+    </div>
+  )}
+  <slot />
+</form>
+
+<script>
+  import { initAll } from '@jitforms/astro';
+  document.addEventListener('DOMContentLoaded', initAll);
+</script>

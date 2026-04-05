@@ -1,0 +1,44 @@
+{
+  "name": "@jitforms/astro",
+  "version": "0.1.0",
+  "description": "Astro component and client helper for JitForms — drop-in <JitForm> for .astro files.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./JitForm.astro": "./components/JitForm.astro"
+  },
+  "files": ["dist", "components"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@jitforms/js": "^0.1.0"
+  },
+  "peerDependencies": {
+    "astro": ">=4.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": ["jitforms", "astro", "forms", "integration", "form-handling"],
+  "author": "El Mehdi El fatihi <tech@jitforms.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/jitforms/jitforms-integrations#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jitforms/jitforms-integrations.git",
+    "directory": "packages/astro"
+  },
+  "bugs": "https://github.com/jitforms/jitforms-integrations/issues",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}

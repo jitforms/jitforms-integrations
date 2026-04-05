@@ -1,0 +1,17 @@
+{
+  "name": "@jitforms/example-html",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5178",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@jitforms/html": "*"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
