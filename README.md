@@ -1,254 +1,33 @@
 # JitForms Integrations
 
-Official frontend SDKs and integrations for [JitForms](https://jitforms.com) — form handling built for devs.
+Official frontend SDKs for [JitForms](https://jitforms.com) — form handling built for devs.
 
 Add a form endpoint to any site in seconds. Collect submissions, block spam with AI, and trigger webhooks — no backend required.
 
 ## Packages
 
-| Package | Description | Size |
-|---------|-------------|------|
-| [`@jitforms/js`](./packages/js) | Core JavaScript/TypeScript SDK — zero deps | ~1.6 KB |
-| [`@jitforms/react`](./packages/react) | React hook (`useJitForm`) | ~1.0 KB |
-| [`@jitforms/vue`](./packages/vue) | Vue 3 composable (`useJitForm`) | ~0.9 KB |
-| [`@jitforms/html`](./packages/html) | Drop-in `<script>` tag — zero JS needed | ~2.9 KB |
-| [`@jitforms/svelte`](./packages/svelte) | Svelte store + `use:jitform` action | ~2.0 KB |
-| [`@jitforms/angular`](./packages/angular) | Service with RxJS observable state | ~1.0 KB |
-| [`@jitforms/astro`](./packages/astro) | Astro component + client helper | ~1.0 KB |
-| [`@jitforms/next`](./packages/next) | Next.js `formAction` hook + server actions | ~0.5 KB |
+| Package | Description | Size | Docs |
+|---------|-------------|------|------|
+| [`@jitforms/js`](./packages/js) | Core JavaScript/TypeScript SDK — zero deps | ~1.6 KB | [README](./packages/js/README.md) |
+| [`@jitforms/react`](./packages/react) | React hook (`useJitForm`) | ~1.0 KB | [README](./packages/react/README.md) |
+| [`@jitforms/vue`](./packages/vue) | Vue 3 composable (`useJitForm`) | ~0.9 KB | [README](./packages/vue/README.md) |
+| [`@jitforms/svelte`](./packages/svelte) | Svelte store + `use:jitform` action | ~2.0 KB | [README](./packages/svelte/README.md) |
+| [`@jitforms/angular`](./packages/angular) | Service with RxJS observable state | ~1.0 KB | [README](./packages/angular/README.md) |
+| [`@jitforms/astro`](./packages/astro) | Astro component + client helper | ~1.0 KB | [README](./packages/astro/README.md) |
+| [`@jitforms/next`](./packages/next) | Next.js `formAction` hook + server actions | ~0.5 KB | [README](./packages/next/README.md) |
+| [`@jitforms/html`](./packages/html) | Drop-in `<script>` tag — zero JS needed | ~2.9 KB | [README](./packages/html/README.md) |
 
 All sizes are minified (pre-gzip). Every package ships ESM + CJS + TypeScript declarations.
 
-## Quick Start
+## Install
 
-### Pick your framework
-
-**Vanilla JS / TypeScript**
+Pick the package that matches your stack and jump to its README for full usage:
 
 ```bash
-npm install @jitforms/js
+npm install @jitforms/react      # or @jitforms/vue, @jitforms/svelte, etc.
 ```
 
-```ts
-import { createJitForm } from '@jitforms/js';
-
-const form = createJitForm({ formHash: 'your-form-hash' });
-const result = await form.submit({ name: 'Jane', email: 'jane@example.com' });
-
-if (result.ok) {
-  console.log('Submitted!', result.submission);
-} else {
-  console.error(result.errors); // { email: ['The email field is required.'] }
-}
-```
-
-**React**
-
-```bash
-npm install @jitforms/react
-```
-
-```tsx
-import { useJitForm } from '@jitforms/react';
-
-function ContactForm() {
-  const { submit, isLoading, isSuccess, fieldError } = useJitForm('your-form-hash');
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await submit(Object.fromEntries(new FormData(e.currentTarget)));
-  };
-
-  if (isSuccess) return <p>Thank you!</p>;
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <input name="email" type="email" />
-      {fieldError('email') && <span>{fieldError('email')}</span>}
-      <button disabled={isLoading}>Send</button>
-    </form>
-  );
-}
-```
-
-**Vue**
-
-```bash
-npm install @jitforms/vue
-```
-
-```vue
-<script setup>
-import { useJitForm } from '@jitforms/vue';
-
-const { submit, isLoading, isSuccess, fieldError } = useJitForm('your-form-hash');
-
-async function handleSubmit(e) {
-  e.preventDefault();
-  await submit(Object.fromEntries(new FormData(e.target)));
-}
-</script>
-
-<template>
-  <div v-if="isSuccess">Thank you!</div>
-  <form v-else @submit="handleSubmit">
-    <input name="email" type="email" />
-    <span v-if="fieldError('email')">{{ fieldError('email') }}</span>
-    <button :disabled="isLoading">Send</button>
-  </form>
-</template>
-```
-
-**HTML (no build step)**
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@jitforms/html/dist/jitforms.global.js"></script>
-
-<form data-jitform="your-form-hash" data-jitform-honeypot>
-  <input name="name" required />
-  <span data-jitform-error="name"></span>
-
-  <input name="email" type="email" required />
-  <span data-jitform-error="email"></span>
-
-  <button type="submit">Send</button>
-  <div data-jitform-success style="display:none">Thank you!</div>
-</form>
-```
-
-**Svelte**
-
-```bash
-npm install @jitforms/svelte
-```
-
-```svelte
-<script>
-  import { createJitForm } from '@jitforms/svelte';
-
-  const form = createJitForm('your-form-hash');
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    await $form.submit(Object.fromEntries(new FormData(e.target)));
-  }
-</script>
-
-{#if $form.isSuccess}
-  <p>Thank you!</p>
-{:else}
-  <form on:submit={handleSubmit}>
-    <input name="email" type="email" />
-    {#if $form.fieldError('email')}
-      <span>{$form.fieldError('email')}</span>
-    {/if}
-    <button disabled={$form.isLoading}>Send</button>
-  </form>
-{/if}
-```
-
-**Angular**
-
-```bash
-npm install @jitforms/angular
-```
-
-```ts
-import { Component, OnDestroy } from '@angular/core';
-import { JitFormService } from '@jitforms/angular';
-
-@Component({
-  selector: 'app-contact',
-  standalone: true,
-  template: `
-    @if (state.isSuccess) {
-      <p>Thank you!</p>
-    } @else {
-      <form (ngSubmit)="onSubmit()">
-        <input name="email" [(ngModel)]="email" />
-        @if (form.fieldError('email')) {
-          <span>{{ form.fieldError('email') }}</span>
-        }
-        <button [disabled]="state.isLoading">Send</button>
-      </form>
-    }
-  `,
-})
-export class ContactComponent implements OnDestroy {
-  form = new JitFormService('your-form-hash');
-  state = this.form.snapshot;
-  email = '';
-
-  constructor() {
-    this.form.state.subscribe((s) => (this.state = s));
-  }
-
-  async onSubmit() {
-    await this.form.submit({ email: this.email });
-  }
-
-  ngOnDestroy() {
-    this.form.destroy();
-  }
-}
-```
-
-**Astro**
-
-```bash
-npm install @jitforms/astro
-```
-
-```astro
----
-import JitForm from '@jitforms/astro/JitForm.astro';
----
-
-<JitForm formHash="your-form-hash" honeypot>
-  <input name="email" type="email" required />
-  <span data-jitform-error="email"></span>
-  <button type="submit">Subscribe</button>
-  <p data-jitform-success style="display:none">Thanks!</p>
-</JitForm>
-```
-
-**Next.js**
-
-```bash
-npm install @jitforms/next
-```
-
-```tsx
-// Client component with formAction
-'use client';
-import { useJitFormAction } from '@jitforms/next';
-
-export function ContactForm() {
-  const { formAction, isLoading, isSuccess, fieldError } = useJitFormAction('your-form-hash');
-
-  if (isSuccess) return <p>Thank you!</p>;
-
-  return (
-    <form action={formAction}>
-      <input name="email" type="email" />
-      {fieldError('email') && <span>{fieldError('email')}</span>}
-      <button disabled={isLoading}>Send</button>
-    </form>
-  );
-}
-```
-
-```ts
-// Server action (bypasses CORS)
-'use server';
-import { serverSubmitForm } from '@jitforms/next/server';
-
-export async function submitContact(formData: FormData) {
-  return serverSubmitForm('your-form-hash', {
-    email: formData.get('email') as string,
-  });
-}
-```
+Each framework package depends on `@jitforms/js` (auto-installed).
 
 ## Features
 
@@ -262,30 +41,35 @@ All packages share the same core capabilities from `@jitforms/js`:
 - **Zero dependencies** — core SDK uses native `fetch`, no polyfills needed
 - **Tree-shakeable** — ESM + CJS dual exports, side-effect free
 
-## Architecture
+## API Contract
+
+All packages submit to the JitForms API:
 
 ```
-@jitforms/js          ← Core SDK (all packages depend on this)
-├── @jitforms/react   ← useJitForm hook
-├── @jitforms/vue     ← useJitForm composable
-├── @jitforms/html    ← Standalone, no dependency on core (self-contained)
-├── @jitforms/svelte  ← Store + action
-├── @jitforms/angular ← Service with RxJS
-├── @jitforms/astro   ← Component + client helper
-└── @jitforms/next    ← Extends @jitforms/react + server actions
+POST /f/{formHash}
+Content-Type: application/json (or multipart/form-data for files)
+Accept: application/json
 ```
+
+**Success (201)** — `{ data: { id, data, is_spam, created_at }, redirect_url? }`
+**Validation Error (422)** — `{ message, errors: { email: ["The email field is required."] } }`
+
+CORS is enabled on `/f/*` so the SDKs work from any origin. No CSRF token required.
+
+## Documentation
+
+Full API reference and examples at [docs.jitforms.com](https://docs.jitforms.com).
 
 ## Development
 
 ### Prerequisites
 
-- Node.js 18+
-- npm 9+
+Node.js 18+ and npm 9+.
 
 ### Setup
 
 ```bash
-git clone https://github.com/your-org/jitforms-integrations.git
+git clone https://github.com/jitforms/jitforms-integrations.git
 cd jitforms-integrations
 npm install
 ```
@@ -302,125 +86,36 @@ Packages are built in dependency order: `js` first, then framework packages in p
 ### Test
 
 ```bash
-npm test               # Run all 143 tests
+npm test               # Run all 145 tests
 npm run test:watch     # Watch mode
 ```
 
-Tests use [Vitest](https://vitest.dev) with jsdom. Each package has its own test suite under `packages/*/tests/`.
+### Examples
 
-| Package | Tests | Coverage |
-|---------|-------|----------|
-| `@jitforms/js` | 26 | submitForm, honeypot, captcha, createJitForm, JitFormError |
-| `@jitforms/react` | 12 | Hook state, loading, success, error, fieldErrors, reset |
-| `@jitforms/vue` | 11 | Composable refs, computed fieldErrors, reset, options |
-| `@jitforms/html` | 14 | Auto-discovery, CSS classes, field errors, honeypot, redirect |
-| `@jitforms/svelte` | 23 | Store subscribe/unsubscribe, action events, destroy, update |
-| `@jitforms/angular` | 16 | BehaviorSubject state, observable, snapshot, destroy |
-| `@jitforms/astro` | 14 | initForm, initAll, CSS classes, field errors |
-| `@jitforms/next` | 19 | formAction, server submit, callbacks, auto-redirect |
+The `examples/` directory contains runnable demo apps for each package — each is a minimal working integration you can copy from.
 
-### Project Structure
+```bash
+cd examples/react && npm run dev
+```
+
+### Project structure
 
 ```
 jitforms-integrations/
 ├── packages/
-│   ├── js/             # Core SDK
-│   │   ├── src/
-│   │   │   ├── client.ts       # submitForm, createJitForm
-│   │   │   ├── types.ts        # All shared TypeScript types
-│   │   │   ├── errors.ts       # JitFormError class
-│   │   │   └── index.ts
-│   │   └── tests/
-│   ├── react/          # React hook
-│   │   ├── src/
-│   │   │   ├── use-jit-form.ts
-│   │   │   └── index.ts
-│   │   └── tests/
-│   ├── vue/            # Vue composable
-│   │   ├── src/
-│   │   │   ├── use-jit-form.ts
-│   │   │   └── index.ts
-│   │   └── tests/
-│   ├── html/           # HTML embed script
-│   │   ├── src/
-│   │   │   ├── jitforms-html.ts
-│   │   │   ├── global.ts
-│   │   │   └── index.ts
-│   │   └── tests/
-│   ├── svelte/         # Svelte store + action
-│   │   ├── src/
-│   │   │   ├── create-jit-form.ts
-│   │   │   ├── action.ts
-│   │   │   └── index.ts
-│   │   └── tests/
-│   ├── angular/        # Angular service
-│   │   ├── src/
-│   │   │   ├── jit-form.service.ts
-│   │   │   └── index.ts
-│   │   └── tests/
-│   ├── astro/          # Astro component
-│   │   ├── src/
-│   │   │   ├── client.ts
-│   │   │   └── index.ts
-│   │   ├── components/
-│   │   │   └── JitForm.astro
-│   │   └── tests/
-│   └── next/           # Next.js helpers
-│       ├── src/
-│       │   ├── use-jit-form-action.ts
-│       │   ├── server-submit.ts
-│       │   ├── index.ts
-│       │   └── server.ts
-│       └── tests/
+│   ├── js/             # Core SDK (all other packages depend on this)
+│   ├── react/          # useJitForm hook
+│   ├── vue/            # useJitForm composable
+│   ├── svelte/         # Store + action
+│   ├── angular/        # Service with RxJS
+│   ├── astro/          # Component + client helper
+│   ├── next/           # Extends @jitforms/react + server actions
+│   └── html/           # Standalone, self-contained
+├── examples/           # One runnable demo per package
 ├── vitest.config.ts
 ├── tsconfig.json
 └── package.json
 ```
-
-## API Contract
-
-All packages submit to the JitForms API:
-
-```
-POST /f/{formHash}
-Content-Type: application/json (or multipart/form-data for files)
-Accept: application/json
-```
-
-**Success (201)**
-
-```json
-{
-  "data": {
-    "id": "uuid",
-    "data": { "name": "Jane", "email": "jane@example.com" },
-    "is_spam": false,
-    "created_at": "2026-04-02T10:00:00Z"
-  },
-  "redirect_url": "https://example.com/thanks"
-}
-```
-
-**Validation Error (422)**
-
-```json
-{
-  "message": "The email field is required.",
-  "errors": {
-    "email": ["The email field is required."]
-  }
-}
-```
-
-No CSRF token is required. The `/f/*` endpoint is excluded from CSRF verification.
-
-## CORS Note
-
-The JitForms API does not set CORS headers by default. For cross-origin submissions from browsers, either:
-
-1. Configure CORS on your JitForms instance
-2. Use `@jitforms/next` server actions to proxy through your own server
-3. Submit from the same origin
 
 ## License
 
